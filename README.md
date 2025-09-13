@@ -497,7 +497,7 @@ docker-compose up --build
 
 <div align="center">
 
-### 🏆 **Built with ❤️ for hackathons by developers, for developers**
+### 🏆 **Built with ❤️ for hackathons by Team Eclipse**
 
 *⭐ Star this repo if you found it helpful!*
 
