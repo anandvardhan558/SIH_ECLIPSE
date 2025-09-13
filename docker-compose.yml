@@ -1,0 +1,45 @@
+services:
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: timetable-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - CORS_ORIGIN=http://localhost:3000
+    volumes:
+      - backend_data:/usr/src/app/data
+    networks:
+      - timetable-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:5000/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: timetable-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - timetable-network
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000
+
+volumes:
+  backend_data:
+    driver: local
+
+networks:
+  timetable-network:
+    driver: bridge
